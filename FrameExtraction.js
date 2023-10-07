@@ -38,7 +38,6 @@ function selectVideo() {
 
 async function extractFrames(videoPlayer) {
   const frameGallery = document.getElementById("image-container");
-  frameGallery.innerHTML = ""
   const numFrames = 6; // 设置要抽取的帧数
   const videoWidth = videoPlayer.videoWidth;
   const videoHeight = videoPlayer.videoHeight;
@@ -46,13 +45,12 @@ async function extractFrames(videoPlayer) {
   canvas.width = videoWidth;
   canvas.height = videoHeight;
   const context = canvas.getContext("2d");
-  let interval = 1 / frameTotal; // 计算每帧时长
+  let interval = 1 / (frameTotal - 1); // 计算每帧时长
   let fps = 0;
   let currentTime = 0;
   let frames = [];
 
   while (fps < numFrames) {
-    console.log('currentTime: ', currentTime);
     videoPlayer.currentTime = currentTime;
     await new Promise((r) => (seeked = r));
     context.drawImage(videoPlayer, 0, 0, videoWidth, videoHeight);
