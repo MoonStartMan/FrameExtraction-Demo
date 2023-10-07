@@ -45,6 +45,17 @@ p {
     cursor: pointer;
 }
 
+#cover #container #container-download-button {
+    background-color: #000;
+    border: none;
+    color: #FFF;
+    border-radius: .3125rem;
+    padding: .3125rem;
+    margin: .625rem 0 0 .625rem;
+    cursor: pointer;
+    display: none;
+}
+
 #cover #container #video-player {
     display: block;
     margin: 1.25rem auto 0 auto;
@@ -55,14 +66,16 @@ p {
 #cover #container #image-container {
     width: 100%;
     margin: 1.25rem auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .frame-container {
-    display: inline-block;
-    margin: 10px;
+    max-width: 12.5rem;
+    height: auto;
 }
 
 .frame-image {
-    width: 200px;
-    height: auto;
+    width: 100%;
 }
