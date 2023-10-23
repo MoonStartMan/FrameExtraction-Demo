@@ -273,6 +273,7 @@ async function extractFrames() {
         video.src = videoUrl;
         video.controls = true;
         video.autoplay = true;
+        video.loop = btnActive
         CONFIG.resultVideoURL = videoUrl;
         searchElements("video_result")
         // 添加视频元素到页面
@@ -467,5 +468,26 @@ async function extractFrames() {
                 // contaierCcreateItemBox[i].classList.remove('active')
             }
         }
+    }
+  }
+
+  var btnActive = false
+
+  function loopBtnClick() {
+    btnActive = !btnActive
+    const loopBtn = document.getElementById("loop-video-btn")
+    if (btnActive) {
+      loopBtn.style.backgroundColor = "#000"
+      loopBtn.style.color = "#FFF"
+    } else {
+      loopBtn.style.backgroundColor = "#FFF"
+      loopBtn.style.color = "#000"
+    }
+
+    const resultVideoWrapper = document.getElementById("video_result")
+    for(let i = 0; i < resultVideoWrapper.children.length; i++) {
+      if (resultVideoWrapper.children[i].tagName == "VIDEO" || resultVideoWrapper.children[i].tagName == "video") {
+        resultVideoWrapper.children[i].loop = btnActive
+      }
     }
   }

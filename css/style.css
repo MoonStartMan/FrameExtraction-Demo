@@ -79,7 +79,8 @@ p {
 #cover .content-boxs .content-box-item-container .container-item .bottom-btn-box .left-box #download-video-btn,
 #cover .content-boxs .content-box-item-container .container-item .bottom-btn-box .left-box #upload-video-btn,
 #cover .content-boxs .content-box-item-container .container-item .bottom-btn-box .left-box #create-image-btn,
-#cover .content-boxs .content-box-item-container .container-item .bottom-btn-box .left-box #download-image-btn {
+#cover .content-boxs .content-box-item-container .container-item .bottom-btn-box .left-box #download-image-btn,
+#cover .content-boxs .content-box-item-container .container-item .bottom-btn-box .left-box #loop-video-btn {
   width: 6.25rem;
   height: 1.875rem;
   background-color: #FFF;
@@ -91,7 +92,8 @@ p {
   border-radius: 0.625rem;
 }
 #cover .content-boxs .content-box-item-container .container-item .bottom-btn-box .left-box #create-video-btn,
-#cover .content-boxs .content-box-item-container .container-item .bottom-btn-box .left-box #create-image-btn {
+#cover .content-boxs .content-box-item-container .container-item .bottom-btn-box .left-box #create-image-btn,
+#cover .content-boxs .content-box-item-container .container-item .bottom-btn-box .left-box #loop-video-btn {
   margin-right: 1.25rem;
 }
 #cover .content-boxs .content-box-item-container .container-item .bottom-btn-box .btns {
