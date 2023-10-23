@@ -1,0 +1,212 @@
+html {
+  font-size: 16px;
+  background-color: #EEE;
+}
+
+html,
+body,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+#cover {
+  width: 100%;
+
+  #change-menu-cover {
+    width: 87.5rem;
+    height: 6.25rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    #change-menus {
+      width: 100%;
+      height: 3.75rem;
+      display: flex;
+      align-items: center;
+
+      .change-menu-item {
+        width: 6.25rem;
+        height: 2.5rem;
+        background-color: #CCC;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        font-size: .875rem;
+      }
+
+      .active {
+        background-color: #FFF;
+      }
+
+      #change-menu1 {
+        border-radius: .625rem 0 0 .625rem;
+      }
+
+      #change-menu2 {
+        border-radius: 0 .625rem .625rem 0;
+      }
+
+    }
+  }
+
+  .content-boxs {
+    width: 87.5rem;
+    margin: 0 auto;
+
+    .content-box-item {
+      width: 100%;
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+    // 生成框部分
+    .content-box-item-container {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .container-item {
+        width: 49%;
+        // 底部选择器
+        .bottom-btn-box {
+          width: 100%;
+          padding-top: 1.25rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          .left-box {
+            #upload-image-btn,
+            #create-video-btn,
+            #download-video-btn,
+            #upload-video-btn,
+            #create-image-btn,
+            #download-image-btn{
+              width: 6.25rem;
+              height: 1.875rem;
+              background-color: #FFF;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+              font-size: .875rem;
+              border-radius: .625rem;
+            }
+            #create-video-btn,
+            #create-image-btn {
+              margin-right: 1.25rem;
+            }
+          }
+          .btns {
+            display: flex;
+            align-items: center;
+          }
+          .right-box {
+            input {
+              width: 6.25rem;
+              height: 1.875rem;
+              outline: none;
+              border: none;
+              border-radius: .625rem;
+              text-indent: 1.25rem;
+            }
+            label {
+              font-size: .875rem;
+            }
+          }
+        }
+      }
+      .container-item-title {
+        font-size: .875rem;
+        font-weight: bold;
+      }
+      .container-item-box {
+        width: 100%;
+        height: 31.25rem;
+        border-radius: .625rem;
+        margin-top: 1.25rem;
+        background-color: #fff;
+        // 占位图部分
+        .position-item-cover {
+          width: 100%;
+          height: 100%;
+          display: none;
+          .position-item {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            .position-item-image {
+              width: 8rem;
+              height: 8rem;
+              margin: auto;
+            }
+            label {
+              font-size: .875rem;
+              text-align: center;
+              font-weight: bold;
+              text-align: center;
+              display: block;
+            }
+          }
+        }
+        .active {
+          display: block;
+        }
+        // 生成内容部分,上传内容
+        .contaier-create-item-box{
+          width: 100%;
+          height: 100%;
+          display: none;
+          #video-player,
+          #image_preview,
+          #video_result,
+          #image-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          #image_preview {
+            img {
+              max-height: 100%;
+              max-width: 100%;
+            }
+          }
+          #image-container {
+            img {
+              max-height: 100%;
+              max-width: 100%;
+            }
+          }
+          #video-player {
+            video {
+              max-height: 100%;
+              max-width: 100%;
+            }
+          }
+          #video_result {
+            video {
+              max-height: 100%;
+              max-width: 100%;
+            }
+          }
+        }
+        .active {
+          display: block;
+        }
+      }
+    }
+  }
+
+}

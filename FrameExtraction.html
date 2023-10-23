@@ -3,25 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FrameExtraction</title>
-    <link rel="stylesheet" href="./style.css">
+    <title>自动生成视频</title>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
-
 <body>
     <div id="cover">
-        <p id="title">视频抽帧</p>
-        <div id="container">
-            <p class="container-title">视频展示部分</p>
-            <button id="container-uploading-button" onclick="selectVideo()">点击上传视频</button>
-            <video id="video-player" controls></video>
-            <p class="container-title">抽帧图片图部分</p>
-            <div id="image-container">
-              
+        <div id="change-menu-cover">
+            <!-- 菜单框 -->
+            <div id="change-menus">
+                <div class="change-menu-item active" id="change-menu1">生成视频</div>
+                <div class="change-menu-item" id="change-menu2">生成图集</div>
             </div>
-            <button id="container-download-button" onclick="downloadSelectedFrames()">下载全部</button>
+        </div>
+
+        <div class="content-boxs">
+            <div class="content-box-item active" id="content-item1">
+                <!-- 生成框部分 -->
+                <div class="content-box-item-container">
+                    <div class="container-item">
+                        <div class="container-item-title">步骤一：上传纹理图集</div>
+                        <div class="container-item-box">
+                            <!-- 占位图 -->
+                            <div class="position-item-cover active">
+                                <div class="position-item">
+                                    <div class="position-item-image">
+                                        <img src="./assets/image.png" alt="">
+                                        <label>请先上传图集</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 上传部分 -->
+                            <div class="contaier-create-item-box">
+                                <div id="image_preview"></div>
+                            </div>
+                        </div>
+                        <!-- 底部选择器 -->
+                        <div class="bottom-btn-box">
+                            <div class="left-box">
+                                <div id="upload-image-btn" onclick="selectImage()">上传图集</div>
+                            </div>
+                            <div class="right-box">
+                                <label id="image-column-number">列数：<input type="number" /></label>
+                                <label id="image-row-number">行数：<input type="number" /></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-item">
+                        <div class="container-item-title">步骤二：下载封面视频</div>
+                        <div class="container-item-box">
+                            <!-- 占位图 -->
+                            <div class="position-item-cover active">
+                                <div class="position-item">
+                                    <div class="position-item-image">
+                                        <img src="./assets/video.png" alt="">
+                                        <label>请先生成图案</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 生成部分 -->
+                            <div class="contaier-create-item-box">
+                                <div id="video_result" class="video-result"></div>
+                            </div>
+                        </div>
+                        <!-- 底部选择器 -->
+                        <div class="bottom-btn-box">
+                            <div class="left-box btns">
+                                <div id="create-video-btn" onclick="startImage()">生成视频</div>
+                                <div id="download-video-btn" onclick="downloadVideo()">下载视频</div>
+                            </div>
+                            <div class="right-box">
+                                <label id="videmo-num">视频时长：<input type="number" /></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-box-item" id="content-item2">
+                <!-- 生成框部分 -->
+                <div class="content-box-item-container">
+                    <div class="container-item">
+                        <div class="container-item-title">步骤一：上传目标视频</div>
+                        <div class="container-item-box">
+                            <!-- 占位图 -->
+                            <div class="position-item-cover active">
+                                <div class="position-item">
+                                    <div class="position-item-image">
+                                        <img src="./assets/image.png" alt="">
+                                        <label>请先上传视频</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 上传部分 -->
+                            <div class="contaier-create-item-box">
+                                <video id="video-player" controls></video>
+                            </div>
+                        </div>
+                        <!-- 底部选择器 -->
+                        <div class="bottom-btn-box">
+                            <div class="left-box">
+                                <div id="upload-video-btn" onclick="selectVideo()">上传视频</div>
+                            </div>
+                            <div class="right-box">
+                                <label id="video-fps-number">帧率：<input type="number" /></label>
+                                <label id="video-column-number">列数：<input type="number" /></label>
+                                <label id="video-row-number">行数：<input type="number" /></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-item">
+                        <div class="container-item-title">步骤二：下载纹理图集</div>
+                        <div class="container-item-box">
+                            <!-- 占位图 -->
+                            <div class="position-item-cover active">
+                                <div class="position-item">
+                                    <div class="position-item-image">
+                                        <img src="./assets/image.png" alt="">
+                                        <label>请先生成图集</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 生成部分 -->
+                            <div class="contaier-create-item-box">
+                                <div id="image-container"></div>
+                            </div>
+                        </div>
+                        <!-- 底部选择器 -->
+                        <div class="bottom-btn-box">
+                            <div class="left-box btns">
+                                <div id="create-image-btn" onclick="extractFrames()">生成图集</div>
+                                <div id="download-image-btn" onclick="downloadImage()">下载图集</div>
+                            </div>
+                            <div class="right-box"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
-<script src="./frameExtraction.js"></script>
-
+<script src="./js/FrameExtraction.js"></script>
 </html>
