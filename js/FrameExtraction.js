@@ -1,5 +1,5 @@
 import '../css/style.less'
-// require('ffmpeg.js')
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg/dist/ffmpeg.min'
 
 function menuChange() {
     const menu1 = document.getElementById("change-menu1")
@@ -549,66 +549,32 @@ async function extractFrames() {
     }
   }
 
-  async function convertWebMtoGIF(inputFile, outputFileName, duration) {
-    const ffmpeg = createFFmpeg({
-      log: true,
-      corePath: 'path/to/ffmpeg-core.js', // 替换为ffmpeg.js的路径
-      workerPath: 'path/to/ffmpeg-worker.js', // 替换为ffmpeg.js的路径
-      // 如果你已将ffmpeg.js文件放入你的项目目录中的某个文件夹中，可以使用以下方式指定路径：
-      // corePath: 'vendor/ffmpeg/ffmpeg-core.js',
-      // workerPath: 'vendor/ffmpeg/ffmpeg-worker.js',
-    });
+  async function convertWebmToGif(inputFile, outputFileName, duration) {
+    const ffmpeg = createFFmpeg({ log: true });
   
-    // 加载 ffmpeg.js
     await ffmpeg.load();
   
-    // 读取输入文件
-    await ffmpeg.FS('writeFile', inputFile.name, await fetchFile(inputFile));
+    const videoFile = await fetchFile(inputFile);
+    ffmpeg.FS('writeFile', 'input.webm', await fetchFile(videoFile));
   
-    // 设置转换参数
-    const command = `-i ${inputFile.name} -t ${duration} ${outputFileName}.gif`;
+    await ffmpeg.run('-i', 'input.webm', '-t', duration, 'output.gif');
   
-    // 执行转换命令
-    await ffmpeg.run(...command.split(' '));
+    const gifData = ffmpeg.FS('readFile', 'output.gif');
   
-    // 获取转换结果
-    const outputData = ffmpeg.FS('readFile', `${outputFileName}.gif`);
-  
-    // 创建并下载 GIF 图像
-    const gifBlob = new Blob([outputData.buffer], {
-      type: 'image/gif'
-    });
+    const gifBlob = new Blob([gifData.buffer], { type: 'image/gif' });
     const gifUrl = URL.createObjectURL(gifBlob);
-    const link = document.createElement('a');
-    link.href = gifUrl;
-    link.download = `${outputFileName}.gif`;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  
-    // 清理资源
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    a.href = gifUrl;
+    a.download = 'output.gif';
+    a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(gifUrl);
-    ffmpeg.FS('unlink', `${outputFileName}.gif`);
-  }
-  
-  // 辅助函数：将File对象转换为Uint8Array
-  function fetchFile(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        resolve(new Uint8Array(event.target.result));
-      };
-      reader.onerror = (event) => {
-        reject(new Error(`Failed to read file: ${file.name}`));
-      };
-      reader.readAsArrayBuffer(file);
-    });
-  }
+}
 
 function downloadGif() {
   if (!CONFIG.resultVideoURL) return;
-  convertWebMtoGIF(CONFIG.resultVideoURL, CONFIG.videoFileName, CONFIG.fps2)
+  convertWebmToGif(CONFIG.resultVideoURL, CONFIG.videoFileName, CONFIG.fps2)
 }
 
 function DOMClickAction() {
