@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>自动生成视频</title>
-    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     <div id="cover">
@@ -40,7 +39,7 @@
                         <!-- 底部选择器 -->
                         <div class="bottom-btn-box">
                             <div class="left-box">
-                                <div id="upload-image-btn" onclick="selectImage()">上传图集</div>
+                                <div id="upload-image-btn">上传图集</div>
                             </div>
                             <div class="right-box">
                                 <label id="image-column-number">列数：<input type="number" /></label>
@@ -67,13 +66,16 @@
                         </div>
                         <!-- 底部选择器 -->
                         <div class="bottom-btn-box">
-                            <div class="left-box btns">
-                                <div id="create-video-btn" onclick="startImage()">生成视频</div>
-                                <div id="loop-video-btn" onclick="loopBtnClick()">循环播放</div>
-                                <div id="download-video-btn" onclick="downloadVideo()">下载视频</div>
+                            <div class="left-box">
+                                <label id="videmo-num">视频时长：<input type="number" /></label>
                             </div>
                             <div class="right-box">
-                                <label id="videmo-num">视频时长：<input type="number" /></label>
+                                <div class="left-box btns">
+                                    <div id="create-video-btn">生成视频</div>
+                                    <div id="loop-video-btn">循环播放</div>
+                                    <div id="download-video-btn">下载视频</div>
+                                    <div id="download-gif-btn">下载GIF</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -102,12 +104,10 @@
                         <!-- 底部选择器 -->
                         <div class="bottom-btn-box">
                             <div class="left-box">
-                                <div id="upload-video-btn" onclick="selectVideo()">上传视频</div>
+                                <div id="upload-video-btn">上传视频</div>
                             </div>
                             <div class="right-box">
                                 <label id="video-fps-number">帧率：<input type="number" /></label>
-                                <label id="video-column-number">列数：<input type="number" /></label>
-                                <label id="video-row-number">行数：<input type="number" /></label>
                             </div>
                         </div>
                     </div>
@@ -131,10 +131,14 @@
                         <!-- 底部选择器 -->
                         <div class="bottom-btn-box">
                             <div class="left-box btns">
-                                <div id="create-image-btn" onclick="extractFrames()">生成图集</div>
-                                <div id="download-image-btn" onclick="downloadImage()">下载图集</div>
+                                <label id="video-column-number">列数：<input type="number" /></label>
+                                <label id="video-row-number">行数：<input type="number" /></label>
+                                <label id="video-max-width">最长边: <input type="number" /></label>
                             </div>
-                            <div class="right-box"></div>
+                            <div class="right-box">
+                                <div id="create-image-btn">生成图集</div>
+                                <div id="download-image-btn">下载图集</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -142,5 +146,4 @@
         </div>
     </div>
 </body>
-<script src="./js/FrameExtraction.js"></script>
 </html>

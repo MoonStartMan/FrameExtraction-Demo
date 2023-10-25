@@ -1,3 +1,5 @@
+import '../css/style.less'
+// require('ffmpeg.js')
 
 function menuChange() {
     const menu1 = document.getElementById("change-menu1")
@@ -40,11 +42,12 @@ const CONFIG = {
     ratio: 0.5, // 压缩比例
     row2: 1,
     column2: 1,
-    fps2: 3,
+    fps2: 1,
     resultImageURL: "", // 抽帧图片
     resultVideoURL: "", //抽帧视频
     imageFileName: "",
     videoFileName: "",
+    maxWidth: 1080
 };
 let seeked;
 
@@ -53,6 +56,7 @@ const ELEMENTS = {
     frameGallery: document.getElementById("image-container"),
     columnNumberForm: document.getElementById("video-column-number"),
     rowNumberForm: document.getElementById("video-row-number"),
+    maxWidth: document.getElementById("video-max-width"),
     FPSNumberForm: document.getElementById("video-fps-number"),
     videoResultWrap: document.getElementById("video_result"),
     imagePreviewWrap: document.getElementById("image_preview"),
@@ -68,6 +72,7 @@ function init() {
       columnNumberForm,
       FPSNumberForm,
       rowNumberForm2,
+      maxWidth,
       columnNumberForm2,
       FPSNumberForm2,
     } = ELEMENTS;
@@ -89,6 +94,7 @@ function init() {
       rowNumberForm2,
       columnNumberForm2,
       FPSNumberForm2,
+      maxWidth
     ].forEach((ele, index) => {
       const input = ele.children[0];
       input.addEventListener("input", (ev) => {
@@ -118,6 +124,10 @@ function init() {
             CONFIG.fps2 = value;
             break;
           }
+          case 6: {
+            CONFIG.maxWidth = value;
+            break;
+          }
         }
       });
     });
@@ -126,6 +136,7 @@ function init() {
     columnNumberForm.children[0].value = CONFIG.column;
     FPSNumberForm.children[0].value = CONFIG.fps;
     rowNumberForm2.children[0].value = CONFIG.row2;
+    maxWidth.children[0].value = CONFIG.maxWidth
     columnNumberForm2.children[0].value = CONFIG.column2;
     FPSNumberForm2.children[0].value = CONFIG.fps2;
   }
@@ -135,15 +146,18 @@ function selectVideo() {
     const { videoPlayer, frameGallery, videoResultWrap } = ELEMENTS;
     const fileInput = document.createElement("input");
     fileInput.type = "file";
-    fileInput.accept = "video/mp4";
+    fileInput.accept = "video/*";
     fileInput.style.display = "none";
     seeked = undefined;
   
     fileInput.addEventListener("change", () => {
       const file = fileInput.files[0];
-  
-      // 检查文件类型是否为MP4
-      if (file.type === "video/mp4") {
+      // 检查文件类型
+      const allowedExtensions = ['mp4', 'mov'];
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+
+      // 检查文件类型是否为MP4/MOV
+      if (allowedExtensions.includes(fileExtension)) {
         window._videoLoaded = false;
         CONFIG.fileURL = URL.createObjectURL(file);
         videoPlayer.src = CONFIG.fileURL;
@@ -236,8 +250,8 @@ async function extractFrames() {
     videoPlayer.play();
   }
   
-//   // 生成视频
-  async function generateVideo(frameImageUrls) {
+   // 生成视频
+   async function generateVideo(frameImageUrls) {
     return new Promise(async (resolve, reject) => {
       const frameImages = await getLoadedImage(frameImageUrls);
       if (frameImages.length <= 0) {
@@ -307,23 +321,19 @@ async function extractFrames() {
     }, timeout);
   }
   
-  function getLoadedImage(imageUrls) {
-    return new Promise((resolve) => {
-      let loadedNum = 0;
-      const frameImages = [];
-      imageUrls.forEach((url) => {
-        img = document.createElement("img");
-        frameImages.push(img);
-        img.onload = () => {
-          loadedNum++;
-          if (loadedNum === imageUrls.length) {
-            resolve(frameImages);
-          }
-        };
+  async function getLoadedImage(urls) {
+    const promises = urls.map((url) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
         img.src = url;
-        return img;
+        img.onload = () => resolve(img);
+        img.onerror = (err) => {
+          console.error(`Failed to load image from ${url}:`, err);
+          reject(err);
+        };
       });
     });
+    return Promise.all(promises);
   }
   
 //   /**
@@ -407,16 +417,63 @@ async function extractFrames() {
     await generateVideo(frameURLList);
     closeToast && closeToast();
   }
-  
+
   function downloadImage() {
     if (!CONFIG.resultImageURL) return;
-    const link = document.createElement("a");
-    link.href = CONFIG.resultImageURL;
-    link.download = `${CONFIG.imageFileName || ""}_${new Date().toLocaleString()}.png`;
-    link.style.display = "none";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    /// 新宽度
+    var newWidth;
+    /// 新高度
+    var newHeight;
+
+    /// 当前列数
+    const column = CONFIG.column
+    /// 当前行数
+    const row = CONFIG.row
+    /// 当前最长边
+    const maxWidth = CONFIG.maxWidth
+    
+    console.log(column, row, maxWidth)
+
+    if (column == row) {
+      newHeight = maxWidth
+      newWidth = maxWidth
+    } else if (column > row) {
+      newWidth = maxWidth
+      newHeight = maxWidth * (row / column)
+    } else {
+      newHeight = maxWidth
+      newWidth = maxWidth * (column / row)
+    }
+
+    console.log(newWidth, newHeight)
+
+    canvas.width = newWidth
+    canvas.height = newHeight
+
+    // 使用fetch获取图片并转换为Blob对象
+  fetch(CONFIG.resultImageURL)
+  .then(response => response.blob())
+  .then(blob => {
+    const img = new Image(); // 创建图片元素对象
+    img.onload = function() {
+      ctx.drawImage(img, 0, 0, newWidth, newHeight);
+      // 将canvas转换为新的图片URL
+      const newImageUrl = canvas.toDataURL();
+      const link = document.createElement("a");
+      link.href = newImageUrl;
+      link.download = `${CONFIG.imageFileName || ""}_${new Date().toLocaleString()}.png`;
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+    img.src = URL.createObjectURL(blob); // 将Blob对象转换为图片元素对象的src属性
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
   }
   
   function downloadVideo() {
@@ -491,3 +548,117 @@ async function extractFrames() {
       }
     }
   }
+
+  async function convertWebMtoGIF(inputFile, outputFileName, duration) {
+    const ffmpeg = createFFmpeg({
+      log: true,
+      corePath: 'path/to/ffmpeg-core.js', // 替换为ffmpeg.js的路径
+      workerPath: 'path/to/ffmpeg-worker.js', // 替换为ffmpeg.js的路径
+      // 如果你已将ffmpeg.js文件放入你的项目目录中的某个文件夹中，可以使用以下方式指定路径：
+      // corePath: 'vendor/ffmpeg/ffmpeg-core.js',
+      // workerPath: 'vendor/ffmpeg/ffmpeg-worker.js',
+    });
+  
+    // 加载 ffmpeg.js
+    await ffmpeg.load();
+  
+    // 读取输入文件
+    await ffmpeg.FS('writeFile', inputFile.name, await fetchFile(inputFile));
+  
+    // 设置转换参数
+    const command = `-i ${inputFile.name} -t ${duration} ${outputFileName}.gif`;
+  
+    // 执行转换命令
+    await ffmpeg.run(...command.split(' '));
+  
+    // 获取转换结果
+    const outputData = ffmpeg.FS('readFile', `${outputFileName}.gif`);
+  
+    // 创建并下载 GIF 图像
+    const gifBlob = new Blob([outputData.buffer], {
+      type: 'image/gif'
+    });
+    const gifUrl = URL.createObjectURL(gifBlob);
+    const link = document.createElement('a');
+    link.href = gifUrl;
+    link.download = `${outputFileName}.gif`;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  
+    // 清理资源
+    URL.revokeObjectURL(gifUrl);
+    ffmpeg.FS('unlink', `${outputFileName}.gif`);
+  }
+  
+  // 辅助函数：将File对象转换为Uint8Array
+  function fetchFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        resolve(new Uint8Array(event.target.result));
+      };
+      reader.onerror = (event) => {
+        reject(new Error(`Failed to read file: ${file.name}`));
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+function downloadGif() {
+  if (!CONFIG.resultVideoURL) return;
+  convertWebMtoGIF(CONFIG.resultVideoURL, CONFIG.videoFileName, CONFIG.fps2)
+}
+
+function DOMClickAction() {
+  /// 上传图集
+  const uploadImageBtn = document.getElementById("upload-image-btn")
+  uploadImageBtn.addEventListener('click', function() {
+    selectImage()
+  }, false)
+
+  /// 生成视频
+  const createVideoBtn = document.getElementById("create-video-btn")
+  createVideoBtn.addEventListener('click', function() {
+    startImage()
+  }, false)
+
+  /// 循环播放
+  const loopVideoBtn = document.getElementById("loop-video-btn")
+  loopVideoBtn.addEventListener('click', function() {
+    loopBtnClick()
+  }, false)
+
+  /// 下载视频
+  const downLoadVideoBtn = document.getElementById("download-video-btn")
+  downLoadVideoBtn.addEventListener('click', function() {
+    downloadVideo()
+  }, false)
+
+  /// 下载GIF
+  const downloadGifBtn = document.getElementById("download-gif-btn")
+  downloadGifBtn.addEventListener('click', function() {
+    downloadGif()
+  }, false)
+
+  /// 上传视频
+  const uploadVideoBtn = document.getElementById("upload-video-btn")
+  uploadVideoBtn.addEventListener('click', function() {
+    selectVideo()
+  }, false)
+
+  /// 生成图集
+  const createImageBtn = document.getElementById("create-image-btn")
+  createImageBtn.addEventListener('click', function() {
+    extractFrames()
+  }, false)
+
+  /// 下载图集
+  const downloadImageBtn = document.getElementById("download-image-btn")
+  downloadImageBtn.addEventListener('click', function() {
+    downloadImage()
+  }, false)
+}
+
+DOMClickAction()

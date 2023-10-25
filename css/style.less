@@ -84,9 +84,29 @@ p {
           -moz-box-sizing: border-box;
           -webkit-box-sizing: border-box;
           .left-box {
+            input {
+              width: 3.125rem;
+              height: 1.875rem;
+              outline: none;
+              border: none;
+              border-radius: .625rem;
+              text-indent: 1.25rem;
+            }
+            #video-max-width {
+              input {
+                width: 6.25rem;
+              }
+            }
+            label {
+              font-size: .875rem;
+              display: inline-block;
+              vertical-align: middle;
+              margin-right: 1.25rem;
+            }
             #upload-image-btn,
             #create-video-btn,
             #download-video-btn,
+            #download-gif-btn,
             #upload-video-btn,
             #create-image-btn,
             #download-image-btn,
@@ -103,7 +123,8 @@ p {
             }
             #create-video-btn,
             #create-image-btn,
-            #loop-video-btn {
+            #loop-video-btn,
+            #download-video-btn {
               margin-right: 1.25rem;
             }
           }
@@ -112,13 +133,31 @@ p {
             align-items: center;
           }
           .right-box {
-            input {
+            display: flex;
+            align-items: center;
+            #create-image-btn,
+            #download-image-btn {
               width: 6.25rem;
+              height: 1.875rem;
+              background-color: #FFF;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+              font-size: .875rem;
+              border-radius: .625rem;
+            }
+            #create-image-btn {
+              margin-right: 1.25rem;
+            }
+            input {
+              width: 3.125rem;
               height: 1.875rem;
               outline: none;
               border: none;
               border-radius: .625rem;
               text-indent: 1.25rem;
+              margin-right: 1.25rem;
             }
             label {
               font-size: .875rem;
