@@ -1,3 +1,12 @@
+/**
+ * @file FrameExtraction.js
+ * @description 视频帧提取工具，基于FFmpeg.js实现视频抽帧和图片合成功能，支持等间隔和均匀两种抽帧模式
+ * @author MoonStartMan
+ * @date 2024
+ * 
+ * 视频帧提取工具，基于FFmpeg.js实现视频抽帧和图片合成功能，支持等间隔和均匀两种抽帧模式的详细实现
+ */
+
 import '../css/style.less'
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg/dist/ffmpeg.min'
 
